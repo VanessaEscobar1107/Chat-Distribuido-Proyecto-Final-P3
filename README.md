@@ -55,7 +55,27 @@ Sistema de Chat Distribuido en Elixir.
 
   → Verificar que todos los nodos esten conectados:
 
-                  Node.list()               
+                  Node.list()      
+
+# Arquitectura Técnica
+
+El sistema esta compuesto por los siguientes módulos:
+
+° ChatApp.Application: Inicia  la aplicación y gestiona los procesos supervisados.
+° ChatApp.Auth:        Maneja la autenticaión y almacenamiento de sesiones de 
+                       usuarios.
+° ChatApp.Server:      Gestiona la lógica de comunicación entre nodos y mensajes
+                       de chat.
+° ChatApp.Menu:        Define  la  interfaz de usuario en la terminal, con opciones 
+                       interactiva.
+
+✓ El sistema sigue un enfoque basado en GenServer y ETS.
+
+→ GenServer : Se usa para gestionar la autenticación y la sesión de usuarios.
+→ ETS       : Almacena la información de sesiones de usuarios activos.
+→ Libcluster: Se encarga de conectar los nodos de forma distribuida.
+
+
 
 # Uso del chat 
 
