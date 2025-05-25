@@ -1,0 +1,10 @@
+defmodule ChatApp.Repo.Migrations.CreateChatRooms do
+  use Ecto.Migration
+
+  def change do
+    create table(:chat_rooms) do
+      add :name, :string, null: false
+      timestamps()
+    end
+  end
+end

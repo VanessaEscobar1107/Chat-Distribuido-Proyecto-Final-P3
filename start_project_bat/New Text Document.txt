@@ -1,0 +1,3 @@
+@echo off
+set MNESIA_DIR=c:/Users/Vanes/chat_app/Mnesia.vanessa@localhost
+cmd /k iex --name vanessa@localhost --cookie mysecretcookie
