@@ -7,7 +7,7 @@ Sistema de Chat Distribuido en Elixir.
 
 
 **Introducción**
-  ChatApp es una aplicación de comunicación en tiempo real que permite a los usuarios  
+  ChatApp es una aplicación de comunicación en tiempo real que permite a los usuarios  comunicarse 
   en diferentes nodos: 
 
   ° Ver usuarios conectados
