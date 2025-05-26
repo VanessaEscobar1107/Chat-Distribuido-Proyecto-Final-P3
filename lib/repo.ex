@@ -1,3 +1,5 @@
+# Este modulo se encarga de interactuar con la base de datos, específicamente
+# con PostgreSQL, para almacenar y recuperar datos de la aplicación.
 defmodule ChatApp.Repo do
   use Ecto.Repo,
     otp_app: :chat_app,
