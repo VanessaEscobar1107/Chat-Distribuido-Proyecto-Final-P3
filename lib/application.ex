@@ -4,8 +4,9 @@ defmodule ChatApp.Application do
 
   def start(_type, _args) do
     # Cargar la configuración de Libcluster para gestionar los nodos
-    topologies = Application.get_env(:libcluster, :topologies, [])
+    topologies = Application.get_env(:libcluster, :topologies, [])   # Topologies es para la configuración de Libcluster
 
+    # Children es para definir los procesos que se iniciarán al arrancar la aplicación
     children = [
       {Cluster.Supervisor, [topologies, [name: ChatApp.ClusterSupervisor]]}, # Supervisor de nodos
       ChatApp.Repo,  # Base de datos
