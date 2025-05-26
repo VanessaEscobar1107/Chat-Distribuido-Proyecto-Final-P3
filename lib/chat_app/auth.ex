@@ -1,8 +1,8 @@
+# Este modulo maneja la autenticación de usuarios en la aplicación ChatApp.
 defmodule ChatApp.Auth do
-  use GenServer
-  require Logger
+  use GenServer       # GenServer es para manejar procesos concurrentes en Elixir
+  require Logger      # Logger es para registrar mensajes de log
 
-  #@usuario_activo :chat_usuario_activo  # Tabla ETS para almacenamiento local
 
   @doc """
   Inicia el proceso Auth como parte del árbol de supervisión.
