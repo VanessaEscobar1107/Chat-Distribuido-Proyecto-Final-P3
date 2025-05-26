@@ -1,48 +1,60 @@
+# Este modulo se encarga de coordinar las salas de chat, los usuarios conectados
+# y mensajes dentro del chat.
 defmodule ChatApp.ChatManager do
-  import Ecto.Query
-  use GenServer
+  import Ecto.Query       # import Ecto.Query es para hacer consultas a la base de datos
+  use GenServer           # GenServer es para manejar procesos concurrentes en Elixir
 
-  alias ChatApp.Schemas.ConnectedUser
-  alias ChatApp.Repo
-  alias Bcrypt
+  alias ChatApp.Schemas.ConnectedUser  # Ecto schema para usuarios conectados
+  alias ChatApp.Repo                   # Interactuar con la base de datos
+  alias Bcrypt                         # Bcrypt es para el manejo de contraseñas
 
 
+  # Esta funcion inicia el GenServer y lo registra con un nombre
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
+  # Esta funcion init es para inicializar el estado del GenServer
   def init(_state) do
     {:ok, %{}}
   end
 
+  # Funcion para crear una sala de chat
   def create_room(name) do
     GenServer.call(__MODULE__, {:create_room, name})
   end
 
+  # Funcion para unirse a una sala de chat
   def join_room(user, room) do
     GenServer.call(__MODULE__, {:join_room, user, room})
   end
 
+  # Funcion para enviar un mensaje a una sala de chat
   def send_message(user, room, content) do
     GenServer.call(__MODULE__, {:send_message, user, room, content})
   end
 
+  # Funcion para obtener los mensajes de una sala de chat
   def get_messages(room) do
     GenServer.call(__MODULE__, {:get_messages, room})
   end
 
+  # Funcion para que un usuario salga de una sala de chat
   def leave_room(user, room) do
     GenServer.call(__MODULE__, {:leave_room, user, room})
   end
 
+  # Funcion para listar los usuarios conectados a una sala de chat
   def list_users(room) do
     GenServer.call(__MODULE__, {:list_users, room})
   end
 
+  # Funcion para guardar el chat de una sala en un formato especificado
   def save_chat(room, format) do
   GenServer.call(__MODULE__, {:save_chat, room, format})
 end
 
+# Funcion para guardar el historial de mensajes de una sala en un formato especificado
 defp save_as_txt(room, messages) do
   File.mkdir_p!("saved_chats")  # Asegurar que la carpeta existe
 
@@ -56,6 +68,7 @@ defp save_as_txt(room, messages) do
   :ok  #  Cambiado para evitar errores con GenServer
 end
 
+# Funcion para guardar el historial de mensajes de una sala en formato JSON
 defp save_as_json(room, messages) do
   File.mkdir_p!("saved_chats")  # Asegurar que la carpeta existe
 
@@ -71,16 +84,17 @@ defp save_as_json(room, messages) do
   :ok  #  Cambiado para evitar errores con GenServer
 end
 
-
+# Funcion para obtener el historial de chat de una sala
 def get_chat_history(room) do
   GenServer.call(__MODULE__, {:get_chat_history, room})
 end
 
-
+# Funcion para que un usuario salga del chat
 def exit_chat(user) do
   GenServer.call(__MODULE__, {:exit_chat, user})
 end
 
+# Funcion para registrar un nuevo usuario
 def register_user(username, password) do
   password_hash = Pbkdf2.hash_pwd_salt(password)
 
@@ -89,6 +103,7 @@ def register_user(username, password) do
   |> ChatApp.Repo.insert()
 end
 
+# Funcion para autenticar un usuario con su nombre de usuario y contraseña
 def authenticate_user(username, password) do
   user = ChatApp.Repo.get_by(ChatApp.Schemas.User, username: username)
 
