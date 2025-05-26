@@ -120,6 +120,8 @@ end
 
 ## ---- Manejo de llamadas ---- ##
 
+
+# Funcion para salir del chat
 def handle_call({:exit_chat, user}, _from, state) do
   # Eliminar de la base de datos
   Repo.delete_all(from cu in ConnectedUser, where: cu.username == ^user)
@@ -135,6 +137,7 @@ def handle_call({:exit_chat, user}, _from, state) do
 end
 
 
+# Funcion para obtener el historial de chat de una sala
 def handle_call({:get_chat_history, room}, _from, state) do
   chat_room_struct = ChatApp.Repo.get_by(ChatApp.Schemas.ChatRoom, name: room)
 
@@ -154,7 +157,7 @@ def handle_call({:get_chat_history, room}, _from, state) do
 end
 
 
-
+# Funcion para guardar el chat de una sala en un formato especificado
 def handle_call({:save_chat, room, format}, _from, state) do
   chat_room_struct = ChatApp.Repo.get_by(ChatApp.Schemas.ChatRoom, name: room)
 
@@ -180,11 +183,13 @@ def handle_call({:save_chat, room, format}, _from, state) do
 end
 
 
+ # Funcon para crear una sala de chat
   def handle_call({:create_room, name}, _from, state) do
     new_state = Map.put(state, name, [])
     {:reply, :ok, new_state}
   end
 
+  # Funcion para unirse a una sala de chat
   def handle_call({:join_room, user, room}, _from, state) do
     case Repo.get_by(ConnectedUser, username: user, room: room) do
       nil ->
@@ -197,6 +202,7 @@ end
     end
   end
 
+  # Funcion para enviar un mensaje a una sala de chat
   def handle_call({:send_message, user, room, content}, _from, state) do
     chat_room_struct = Repo.get_by(ChatApp.Schemas.ChatRoom, name: room)
     user_struct = Repo.get_by(ChatApp.Schemas.User, username: user)
@@ -226,6 +232,7 @@ end
     end
   end
 
+  # Funcion para obtener los mensajes de una sala de chat
   def handle_call({:get_messages, room}, _from, state) do
     chat_room_struct = Repo.get_by(ChatApp.Schemas.ChatRoom, name: room)
 
@@ -244,6 +251,7 @@ end
     end
   end
 
+  # Funcion para que un usuario salga de una sala de chat
   def handle_call({:leave_room, user, room}, _from, state) do
     Repo.delete_all(from cu in ConnectedUser, where: cu.username == ^user and cu.room == ^room)
 
@@ -253,6 +261,7 @@ end
     {:reply, :ok, new_state}
   end
 
+  # Funcion para listar los usuarios conectados a una sala de chat
   def handle_call({:list_users, room}, _from, state) do
     users = Repo.all(from cu in ConnectedUser, where: cu.room == ^room, select: cu.username)
     {:reply, users, state}
