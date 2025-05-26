@@ -14,10 +14,11 @@ defmodule ChatApp.Application do
       {ChatApp.Auth,[]},  # Autenticación de usuarios, pasando argumentos
     ]
 
+    # opts es para definir las opciones del supervisor
     opts = [strategy: :one_for_one, name: ChatApp.Supervisor]
 
    case Supervisor.start_link(children, opts) do
-  {:ok, pid} ->
+  {:ok, pid} ->           # esto indica que el supervisor se ha iniciado correctamente
     # Solo inicia el menú si no es el nodo principal (nodo1)
     if Node.self() != :"nodo1@Vanessa" do
       Task.start(fn ->

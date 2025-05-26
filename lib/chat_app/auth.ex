@@ -20,6 +20,7 @@ defmodule ChatApp.Auth do
   @doc """
   Especificación para el supervisor.
   """
+  # `child_spec/1` define cómo se debe iniciar el proceso Auth.
   def child_spec(opts) do
     %{
       id: __MODULE__,
@@ -58,15 +59,15 @@ defmodule ChatApp.Auth do
   Crea un nuevo usuario en la base de datos.
   """
   def create_user(username, password) do
-    changeset = ChatApp.Schemas.User.changeset(
-      %ChatApp.Schemas.User{},
+    changeset = ChatApp.Schemas.User.changeset(   # changeset es para validar y transformar datos antes de insertarlos en la base de datos
+      %ChatApp.Schemas.User{},          # Schemas es para definir la estructura de datos
       %{
         username: username,
         password_hash: Pbkdf2.hash_pwd_salt(password)
       }
     )
 
-    case ChatApp.Repo.insert(changeset) do
+    case ChatApp.Repo.insert(changeset) do   # ChatApp.Repo es para interactuar con la base de datos
       {:ok, _user} ->
         Logger.info("[INFO] Usuario '#{username}' creado exitosamente.")
         {:ok, "Usuario creado. Por favor inicie sesión nuevamente."}
@@ -90,12 +91,15 @@ defmodule ChatApp.Auth do
     GenServer.call(__MODULE__, :obtener_usuario)
   end
 
+
+  # handle_cast es para manejar mensajes asíncronos enviados al GenServer
   @impl true
   def handle_cast({:guardar_usuario, username}, state) do
     Logger.info("[INFO] Sesión guardada para '#{username}'.")
     {:noreply, %{state | usuario: username}}
   end
 
+  # handle_call es para manejar mensajes síncronos enviados al GenServer
   @impl true
   def handle_call(:obtener_usuario, _from, state) do
     Logger.info("[INFO] Usuario activo: '#{state.usuario}'.")
