@@ -1,3 +1,5 @@
+# Este modulo se encarga de manejar la logica de los mensajes dentro
+# del sistema de chat.
 defmodule ChatApp.Schemas.Message do
   use Ecto.Schema
   import Ecto.Changeset
